@@ -1,8 +1,8 @@
 package services
 
 import (
-	"davidsodergren/golang-microservices/domain"
-	"davidsodergren/golang-microservices/utils"
+	"davidsodergren/golang-microservices/mvc/domain"
+	"davidsodergren/golang-microservices/mvc/utils"
 	"net/http"
 )
 

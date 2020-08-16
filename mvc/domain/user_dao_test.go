@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"davidsodergren/golang-microservices/services"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -10,7 +9,7 @@ import (
 
 func TestGetUserNoUserFound(t *testing.T) {
 	const userId int64 = 0
-	user, err := services.UserService.GetUser(userId)
+	user, err := UserDao.GetUser(userId)
 
 	assert.Nil(t, user, "We were not expecting a user with id 0")
 	assert.NotNil(t, err)
@@ -20,7 +19,7 @@ func TestGetUserNoUserFound(t *testing.T) {
 
 func TestGetUserNoError(t *testing.T)  {
 	const userId uint64 = 123
-	user, err := services.UserService.GetUser(123)
+	user, err := UserDao.GetUser(123)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, user)

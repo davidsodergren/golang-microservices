@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"davidsodergren/golang-microservices/utils"
+	"davidsodergren/golang-microservices/mvc/utils"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,8 +11,17 @@ var(
 	users = map[int64]*User{
 		123: &User{Id: 123, FirstName: "Fede", LastName: "Leon", Email: "myemail@gmail.com"},
 	}
-	UserDao userDao
+	UserDao userDaoInterface
 )
+
+type userDaoInterface interface {
+	GetUser(int64) (*User, *utils.ApplicationError)
+}
+
+func init()  {
+	UserDao = &userDao{}
+}
+
 
 type userDao struct {
 

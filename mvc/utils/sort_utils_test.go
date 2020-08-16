@@ -41,14 +41,14 @@ func TestBubbleSortSliceNil(t *testing.T) {
 func BenchmarkBubbleSort10(b *testing.B) {
 	elements := getElements(10)
 	for i := 0; i < b.N; i++ {
-		Sort(elements)
+		BubbleSort(elements)
 	}
 }
 
 func BenchmarkSort10(b *testing.B) {
 	elements := getElements(10)
 	for i := 0; i < b.N; i++ {
-		Sort(elements)
+		sort.Ints(elements)
 	}
 }
 
