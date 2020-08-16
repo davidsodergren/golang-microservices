@@ -21,22 +21,15 @@ func getAuthorizationHeader(accessToken string) string {
 	return fmt.Sprintf(headerAuthorizationFormat, accessToken)
 }
 
-func CreateRepo(accessToken string, request github.CreateRepoRequest) (*github.CreateRepoResponse, *github.ErrorResponse) {
-	headers := http.Header{}
-	headers.Set(headerAuthorization, getAuthorizationHeader(accessToken))
-	
+func CreateRepo(headers http.Header, request github.CreateRepoRequest) (*github.CreateRepoResponse, error) {
+
 	response, err := restclient.Post(urlCreateRepo, request, headers)
-
 	if err != nil {
-		log.Println(fmt.Sprintf("Error when trying to create a new repo in github: %s", err.Error()))
-		return nil, &github.ErrorResponse{ StatusCode: http.StatusInternalServerError, Message: err.Error(),
-		}
+		return nil, err
 	}
-
-	bytes, err := ioutil.ReadAll(response.Body)
+	bytes, err := httpResponseToJson(response)
 	if err != nil {
-		log.Println(fmt.Sprintf("error when trying to unmarshal create repo successful response: %s", err.Error()))
-		return nil, &github.ErrorResponse{StatusCode: http.StatusInternalServerError, Message: "Invalid response body"}
+		return nil, err
 	}
 	defer response.Body.Close()
 
@@ -56,4 +49,19 @@ func CreateRepo(accessToken string, request github.CreateRepoRequest) (*github.C
 	}
 
 	return &result, nil
+}
+
+func createHeader(accessToken string) http.Header {
+	headers := http.Header{}
+	headers.Set(headerAuthorization, getAuthorizationHeader(accessToken))
+	return headers
+}
+
+func httpResponseToJson(response *http.Response) ([]byte, error){
+	bytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Println(fmt.Sprintf("error when trying to unmarshal create repo successful response: %s", err.Error()))
+		return nil, &github.ErrorResponse{StatusCode: http.StatusInternalServerError, Message: "Invalid response body"}
+	}
+	return bytes, nil
 }
